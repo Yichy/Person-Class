@@ -10,30 +10,30 @@
   (with-open-file (str save-path :direction :output
                        :if-exists :append
                        :if-does-not-exist :create)
-    (format str "~A ~A ~A ~A !~%" (name obj) (gender obj) (born-in obj)
+    (format str "~A ~A ~A ~A;person~%" (name obj) (gender obj) (born-in obj)
             (live-in obj))))
 
 (defmethod save-person ((obj legal-person))
   (with-open-file (str save-path :direction :output
                        :if-exists :append
                        :if-does-not-exist :create)
-    (format str "~A ~A ~A ~A ~A !~%" (name obj) (gender obj) (born-in obj)
-            (live-in obj) (nationality obj))))
-
+    (format str "~A ~A ~A ~A ~A;legal-person~%" (name obj) (gender obj)
+            (born-in obj) (live-in obj) (nationality obj))))
 
 (defmethod save-person ((obj real-person))
   (with-open-file (str save-path :direction :output
                        :if-exists :append
                        :if-does-not-exist :create)
-    (format str "~A ~A ~A ~A ~A ~A !~%" (name obj) (gender obj) (born-in obj)
-            (live-in obj) (person-character obj) (parents obj))))
+    (format str "~A ~A ~A ~A ~A;real-person~%" (name obj) (gender obj)
+            (born-in obj) (live-in obj) (person-character obj))))
 
 (defmethod save-person ((obj real-legal-person))
   (with-open-file (str save-path :direction :output
                        :if-exists :append
                        :if-does-not-exist :create)
-    (format str "~A ~A ~A ~A ~A ~A ~A !~%" (name obj) (gender obj) (born-in obj)
-            (live-in obj) (person-character obj) (nationality obj) (parents obj))))
+    (format str "~A ~A ~A ~A ~A ~A;real-legal-person~%" (name obj)
+            (gender obj) (born-in obj) (live-in obj) (person-character obj)
+            (nationality obj))))
 
 (defun save-persons ()
   (dotimes (i (length *persons*) t)
