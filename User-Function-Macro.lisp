@@ -117,12 +117,52 @@ direction: the direction format function will output to
 output doc-string of the function to the direction"
   (format direction "~A" (documentation function 'function)))
 
-(defun string-in (char str)
+(defun char-in (char string)
   (let (rslt)
-    (dotimes (i (length str) rslt)
-      (if (string= char (char str i))
+    (dotimes (i (length string) rslt)
+      (if (string= char (char string i))
           (setf rslt t)))))
+
+(defun string-in (target string)
+  (dotimes (i (- (length string) (- (length target) 1)) nil)
+    (if (string= target string :start2 i :end2 (+ i (length target)))
+        (return-from string-in t))))
 
 (defun type-eq (&rest args)
   (let ((type (type-of (pop args))))
-    (mapcar #'(lambda (x) (if (equal type (type-of x)) t (return-from ))))))
+    (mapcar #'(lambda (x) (if (equal type (type-of x)) t (return-from type-eq nil)))
+            args))
+    t)
+
+(defun type-equal (&rest args)
+  (let ((type (type-of (pop args))))
+    (mapcar #'(lambda (x)
+                (if (equal (if (equal (type-of type) cons) (car type) type)
+                           (if (equal (type-of (type-of x)) cons) (car (type-of x)) (type-of x)))
+                    t (return-from type-equal nil)))
+            args))
+  t)
+
+(defun combine-list (lst1 lst2)
+  `(,@lst1 ,@lst2))
+
+(defun string-split (string &optional (split-when-t
+                                       (lambda (x) (string= x " "))))
+  (do ((i 1 (+ i 1)) rslt)
+      ((or rslt (>= i (length string))) (if (not rslt) (list string) rslt))
+    (if (funcall split-when-t (char string i))
+        (setf rslt
+              (combine-list
+               (list (subseq string 0 i))
+               (string-split (subseq string (+ i 1)) split-when-t))))))
+
+(defun string-split-to-type (string)
+  (multiple-value-bind (val next-pos) (read-from-string string)
+    (combine-list `(,val)
+                  (if (< next-pos (length string))
+                      (string-split-to-type (subseq string next-pos))))))
+
+(defun string-remove-after (string target)
+  (do ((i 0 (+ i 1)))
+      ((or (<= (length string) i)
+           (string= target (char string i))) (subseq string 0 i))))

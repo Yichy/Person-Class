@@ -22,10 +22,6 @@
 (defclass real-person (person)
   ((person-character :accessor person-character
                      :initarg :person-character
-                     :initform "real-person must have character.")
-   (parents :accessor parents
-            :initarg :parents
-            :initform "real-person must have parents.")))
+                     :initform "real-person must have character.")))
 
 (defclass real-legal-person (real-person legal-person) ())
-

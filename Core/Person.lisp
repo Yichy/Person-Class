@@ -4,8 +4,7 @@
                               born-in
                               live-in
                               character
-                              nationality
-                              parents)
+                              nationality)
   (:documentation "Get person type from given args."))
 
 (defmethod test-person-type (
@@ -14,8 +13,7 @@
                              born-in
                              live-in
                              character
-                             nationality
-                             parents)
+                             nationality)
   nil)
 
 (defmethod test-person-type (
@@ -24,12 +22,16 @@
                              (born-in cons)
                              (live-in cons)
                              (character (eql nil))
-                             (nationality (eql nil))
-                             (parents (eql nil)))
+                             (nationality (eql nil)))
   1);number
 
-(defmethod test-person-type ((name cons) (gender symbol) (born-in cons)
-			(live-in cons) (character simple-vector) (nationality (eql nil)) (parents cons))
+(defmethod test-person-type (
+                             (name cons)
+                             (gender symbol)
+                             (born-in cons)
+                             (live-in cons)
+                             (character simple-vector)
+                             (nationality (eql nil)))
   2);number
 
 (defmethod test-person-type (
@@ -38,8 +40,7 @@
                              (born-in cons)
                              (live-in cons)
                              (character (eql nil))
-                             (nationality cons)
-                             (parents (eql nil)))
+                             (nationality cons))
   3);number
 
 (defmethod test-person-type (
@@ -48,13 +49,11 @@
                              (born-in cons)
                              (live-in cons)
                              (character simple-vector)
-                             (nationality cons)
-                             (parents cons))
+                             (nationality cons))
   4);number
 
 (defmacro make-person (name gender born-in live-in &key;keys
                                                      character
-                                                     parents
                                                      nationality)
   "name: a cons, person's name, include name and surname
 gender: a symbol, person's gender, male or female
@@ -69,7 +68,7 @@ nationality: a cons - for multy nationality, person's nationality,
         (born-ing (gensym))
         (live-ing (gensym))
         (characterg (gensym))
-        (nationalityg (gensym))
+        (nationalityg (gensym)))
     (defmacro base-p ()
       `(make-instance 'person
                       :name ,nameg
@@ -89,8 +88,7 @@ nationality: a cons - for multy nationality, person's nationality,
                       :gender ,genderg
                       :born-in ,born-ing
                       :live-in ,live-ing
-                      :person-character ,characterg
-                      :parents ,parentsg))
+                      :person-character ,characterg))
     (defmacro rl-p ()
       `(make-instance 'real-legal-person
                       :name ,nameg
@@ -98,13 +96,17 @@ nationality: a cons - for multy nationality, person's nationality,
                       :born-in ,born-ing
                       :live-in ,live-ing
                       :nationality ,nationalityg
-                      :person-character ,characterg
-                      :parents ,parentsg))
+                      :person-character ,characterg))
     `(let* ((,nameg ,name) (,genderg ,gender) (,born-ing ,born-in) (,live-ing ,live-in)
-            (,characterg ,character) (,nationalityg ,nationality) (,parentsg ,parents)
+            (,characterg ,character) (,nationalityg ,nationality)
             (test-rslt
-             (test-person-type ,nameg ,genderg ,born-ing ,live-ing ,characterg
-                               ,nationalityg ,parentsg)))
+              (test-person-type
+               ,nameg
+               ,genderg
+               ,born-ing
+               ,live-ing
+               ,characterg
+               ,nationalityg)))
        (case test-rslt
 	 (1 (format t "  -Person~%")
 	    (base-p))
@@ -114,8 +116,3 @@ nationality: a cons - for multy nationality, person's nationality,
 	    (legal-p))
 	 (4 (format t "  -Real Legal Person~%")
 	    (rl-p))))))
-
-(defun add-person (&rest args)
-  (mapcar #'(lambda (arg)
-              (vector-push-extend arg *persons*))
-          args))
