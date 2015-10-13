@@ -124,6 +124,8 @@ output doc-string of the function to the direction"
           (setf rslt t)))))
 
 (defun string-in (target string)
+  (if (< (length string) (length target))
+      (return-from string-in nil))
   (dotimes (i (- (length string) (- (length target) 1)) nil)
     (if (string= target string :start2 i :end2 (+ i (length target)))
         (return-from string-in t))))
