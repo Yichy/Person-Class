@@ -68,7 +68,7 @@ nationality: a cons - for multy nationality, person's nationality,
         (born-ing (gensym))
         (live-ing (gensym))
         (characterg (gensym))
-        (nationalityg (gensym)))
+        (nationalityg (gensym)));!
     (defmacro base-p ()
       `(make-instance 'person
                       :name ,nameg
@@ -107,7 +107,7 @@ nationality: a cons - for multy nationality, person's nationality,
                ,live-ing
                ,characterg
                ,nationalityg)))
-       (case test-rslt
+       (case test-rslt;case test-rslt
 	 (1 (format t "  -Person~%")
 	    (base-p))
 	 (2 (format t "  -Real Person~%")

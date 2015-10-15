@@ -15,7 +15,7 @@
            (format ,str "~%    ~A" i))
       (format ,str "))")))))
 
-(defun class-printer (str name-of-class name-of-macro variables)
+(defun class-macro-printer (str name-of-class name-of-macro variables)
   (format str "
     (defmacro ~A ()~%
        `(make-instance '~A~%
@@ -41,6 +41,8 @@
                       (car x)))
           variables))
 
+(defun class-test-rslt-printer)
+
 (defmacro add-maker (name-of-class name-of-macro parents variables)
   (let ((name-of-classg (gensym))
         (parentsg (gensym))
@@ -59,9 +61,11 @@
            (do ((s (read-line str1 nil 'eof) (read-line str1 nil 'eof)))
                ((equal s 'eof) (copy-file person-path-m person-path))
              (format ,str2 "~A~%" s)
-             (if (string-in ";!" s)
-                 (class-printer ,str2 ,name-of-classg ,name-of-macrog ,variablesg))
-             (if (string-in ";let" s)
-                 (class-let-printer ,str2 ,variablesg))
-             (if (string-in ";keys" s)
-                 (class-keys-printer ,str2 ,variablesg))))))))
+             (case (get-make-type s)
+               ('macro-printer
+                (class-macro-printer ,str2 ,name-of-classg ,name-of-macrog
+                                     ,variablesg))
+               ('let-printer
+                (class-let-printer ,str2 ,variablesg))
+               ('keys-printer
+                (class-keys-printer ,str2 ,variablesg)))))))))
