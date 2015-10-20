@@ -118,10 +118,13 @@ output doc-string of the function to the direction"
   (format direction "~A" (documentation function 'function)))
 
 (defun char-in (char string)
-  (let (rslt)
-    (dotimes (i (length string) rslt)
+  "char: a char or length 1 string
+string: a string
+
+return t if can find char in string nil otherwise"
+    (dotimes (i (length string) nil)
       (if (string= char (char string i))
-          (setf rslt t)))))
+          (return-from char-in t))))
 
 (defun string-in (target string)
   (if (< (length string) (length target))
@@ -139,8 +142,8 @@ output doc-string of the function to the direction"
 (defun type-equal (&rest args)
   (let ((type (type-of (pop args))))
     (mapcar #'(lambda (x)
-                (if (equal (if (equal (type-of type) cons) (car type) type)
-                           (if (equal (type-of (type-of x)) cons) (car (type-of x)) (type-of x)))
+                (if (equal (if (equal (type-of type) 'cons) (car type) type)
+                           (if (equal (type-of (type-of x)) 'cons) (car (type-of x)) (type-of x)))
                     t (return-from type-equal nil)))
             args))
   t)
@@ -150,6 +153,10 @@ output doc-string of the function to the direction"
 
 (defun string-split (string &optional (split-when-t
                                        (lambda (x) (string= x " "))))
+  "string: a string
+split-when-t: a function, split when function returns t
+
+return a list of string split by the function"
   (do ((i 1 (+ i 1)) rslt)
       ((or rslt (>= i (length string))) (if (not rslt) (list string) rslt))
     (if (funcall split-when-t (char string i))
@@ -168,3 +175,14 @@ output doc-string of the function to the direction"
   (do ((i 0 (+ i 1)))
       ((or (<= (length string) i)
            (string= target (char string i))) (subseq string 0 i))))
+
+(defun copy-file (from to)
+  (with-open-file (from-str from :direction :input
+                                 :if-exists :supersede
+                                 :if-does-not-exist :create)
+    (with-open-file (to-str to :direction :output
+                               :if-exists :supersede
+                               :if-does-not-exist :create)
+      (do ((string (read-line from-str nil 'eof) (read-line from-str nil 'eof)))
+          ((equal string 'eof) t)
+        (format to-str "~A~%" string)))))

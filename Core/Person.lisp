@@ -51,13 +51,15 @@
                              (character simple-vector)
                              (nationality cons))
   4);number
+;test-person-type-method
 
 (defmacro make-person (name gender born-in live-in &key;keys
                                                      character
                                                      nationality)
   "name: a cons, person's name, include name and surname
 gender: a symbol, person's gender, male or female
-born-in: a cons, where person has born, include city name and country name
+born-in: a cons, where person has born, include city name and
+                country name
 live-in: a cons, where person is living, include address to the dore
 character: a length four array, person's character, use MBTI
 nationality: a cons - for multy nationality, person's nationality,
@@ -108,11 +110,11 @@ nationality: a cons - for multy nationality, person's nationality,
                ,characterg
                ,nationalityg)))
        (case test-rslt;case test-rslt
-	 (1 (format t "  -Person~%")
-	    (base-p))
-	 (2 (format t "  -Real Person~%")
-	    (real-p))
-	 (3 (format t "  -Legal Person~%")
-	    (legal-p))
-	 (4 (format t "  -Real Legal Person~%")
-	    (rl-p))))))
+         (1 (format t "  -Person~%")
+          (base-p))
+         (2 (format t "  -Real Person~%")
+          (real-p))
+         (3 (format t "  -Legal Person~%")
+          (legal-p))
+         (4 (format t "  -Real Legal Person~%")
+          (rl-p))))))
